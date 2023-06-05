@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="create"></div>
+<div id="get"></div>
+<div id="find"></div>
+<script type="text/babel">
+
+    function Create() {
+
+        const create = () => {
+            const data = {'firstName': 'first', 'lastName': 'last'}
+            fetch.get('/client/save', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+        }
+
+        return (
+            <div>
+                <h2>Создание учетной записи</h2>
+                <label>x-Source</label>
+                <select>
+                    <option>mail</option>
+                    <option>mobile</option>
+                    <option>bank</option>
+                    <option>gosuslugi</option>
+                </select>
+                <form>
+                    <input placeholder="Имя"/>
+                    <input placeholder="Фамилия"/>
+                    <input placeholder="Очество"/>
+                    <button>создать</button>
+                </form>
+                <hr/>
+            </div>
+        )
+    }
+
+    const createContainer = document.getElementById('create');
+    const createRoot = ReactDOM.createRoot(createContainer);
+    createRoot.render(<Create/>);
+
+    function Get() {
+        return (
+            <div>
+                <h2>Поиск учетной записи по id</h2>
+                <input type="number"/>
+                <button>найти</button>
+                <hr/>
+            </div>
+        )
+    }
+
+    const getContainer = document.getElementById('get');
+    const getRoot = ReactDOM.createRoot(getContainer);
+    getRoot.render(<Get/>);
+
+    function Find() {
+        return (
+            <div>
+                <h2>Поиск учетной записи по полям</h2>
+                <input placeholder="Имя"/>
+                <input placeholder="Фамилия"/>
+                <input placeholder="Очество"/>
+                <input placeholder="Телефон"/>
+                <input placeholder="email"/>
+                <button>найти</button>
+                <hr/>
+            </div>
+        )
+    }
+
+    const findContainer = document.getElementById('find');
+    const findRoot = ReactDOM.createRoot(findContainer);
+    findRoot.render(<Find/>);
+
+</script>
+</body>
+</html>
