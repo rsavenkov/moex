@@ -1,87 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Hello World</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Test app</title>
 </head>
 <body>
-<div id="create"></div>
-<div id="get"></div>
-<div id="find"></div>
-<script type="text/babel">
-
-    function Create() {
-
-        const create = () => {
-            const data = {'firstName': 'first', 'lastName': 'last'}
-            fetch.get('/client/save', {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
+<div>
+    <h2>Создание учетной записи</h2>
+    <label>x-Source</label>
+    <select id="xSource">
+        <option th:each="header: ${headers}" th:text="${header.name().toLowerCase()}" th:value="${header.name()}"/>
+    </select>
+    <form action="#" onsubmit="create(); return false">
+        <input id="createBankId" placeholder="Id банка"/>
+        <input id="createSecond" placeholder="Фамилия"/>
+        <input id="createFirst" placeholder="Имя"/>
+        <input id="createThird" placeholder="Очество"/>
+        <input id="createBirthDate" placeholder="Дата рождения"/>
+        <input id="createPassport" placeholder="номер паспорта" maxlength="11"/>
+        <input id="createBirthPlace" placeholder="Место рождения"/>
+        <input id="createPhone" placeholder="телефон" maxlength="11"/>
+        <input id="createEmail" placeholder="email"/>
+        <input id="createRegAddress" placeholder="адрес регистрации"/>
+        <input id="createLiveAddress" placeholder="адрес проживания"/>
+        <button type="submit">создать</button>
+    </form>
+    <p id="createMessage"></p>
+    <p id="createError" style="color:red"></p>
+    <hr/>
+</div>
+<script type="text/javascript">
+    const create = async () => {
+        // skip form validation, make it on server side
+        const data = {
+            'bankId': document.getElementById('createBankId')?.value,
+            'lastName': document.getElementById('createSecond')?.value,
+            'firstName': document.getElementById('createFirst')?.value,
+            'thirdName': document.getElementById('createThird')?.value,
+            'birthDate': document.getElementById('createBirthDate')?.value,
+            'passport': document.getElementById('createPassport')?.value,
+            'birthPlace': document.getElementById('createBirthPlace')?.value,
+            'phone': document.getElementById('createPhone')?.value,
+            'email': document.getElementById('createEmail')?.value,
+            'regAddress': document.getElementById('createRegAddress')?.value,
+            'liveAddress': document.getElementById('createLiveAddress')?.value
         }
-
-        return (
-            <div>
-                <h2>Создание учетной записи</h2>
-                <label>x-Source</label>
-                <select>
-                    <option>mail</option>
-                    <option>mobile</option>
-                    <option>bank</option>
-                    <option>gosuslugi</option>
-                </select>
-                <form>
-                    <input placeholder="Имя"/>
-                    <input placeholder="Фамилия"/>
-                    <input placeholder="Очество"/>
-                    <button>создать</button>
-                </form>
-                <hr/>
-            </div>
-        )
+        const res = await fetch('/client/save', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'x-Source': document.getElementById('xSource').selectedOptions[0].value
+            },
+            body: JSON.stringify(data)
+        })
+        if (res.ok) {
+            const data = await res.json();
+            if (data.status == 'ok') {
+                document.getElementById('createMessage').innerText = data.message ? data.message : JSON.stringify(data.clients[0])
+            } else {
+                document.getElementById('createError').innerText = data.message
+            }
+        } else {
+            alert("")
+        }
     }
-
-    const createContainer = document.getElementById('create');
-    const createRoot = ReactDOM.createRoot(createContainer);
-    createRoot.render(<Create/>);
-
-    function Get() {
-        return (
-            <div>
-                <h2>Поиск учетной записи по id</h2>
-                <input type="number"/>
-                <button>найти</button>
-                <hr/>
-            </div>
-        )
+</script>
+<div>
+    <h2>Поиск учетной записи по id</h2>
+    <input id="getId" type="number" placeholder="id"/>
+    <button onclick="get()">найти</button>
+    <p id="getMessage"></p>
+    <p id="getError" style="color:red"></p>
+    <hr/>
+</div>
+<script type="text/javascript">
+    const get = async () => {
+        const id = document.getElementById('getId')
+        if (!id.value) {
+            return
+        }
+        const res = await fetch(`/client/get/${id.value}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.status == 'ok') {
+                document.getElementById('getMessage').innerText = data.message ? data.message : JSON.stringify(data.clients[0])
+            } else {
+                document.getElementById('getError').innerText = data.message
+            }
+        } else {
+            alert("")
+        }
     }
-
-    const getContainer = document.getElementById('get');
-    const getRoot = ReactDOM.createRoot(getContainer);
-    getRoot.render(<Get/>);
-
-    function Find() {
-        return (
-            <div>
-                <h2>Поиск учетной записи по полям</h2>
-                <input placeholder="Имя"/>
-                <input placeholder="Фамилия"/>
-                <input placeholder="Очество"/>
-                <input placeholder="Телефон"/>
-                <input placeholder="email"/>
-                <button>найти</button>
-                <hr/>
-            </div>
-        )
+</script>
+<div>
+    <h2>Поиск учетной записи по полям</h2>
+    <input id="findSecond" placeholder="Фамилия"/>
+    <input id="findFirst" placeholder="Имя"/>
+    <input id="findThird" placeholder="Очество"/>
+    <input id="findPhone" placeholder="Телефон"/>
+    <input id="findEmail" placeholder="email"/>
+    <button onclick="find()">найти</button>
+    <p id="findMessage"></p>
+    <p id="findError" style="color:red"></p>
+    <hr/>
+</div>
+<script type="text/javascript">
+    const find = async () => {
+        // skip form validation, make it on server side
+        const data = {
+            'lastName': document.getElementById('findSecond')?.value,
+            'firstName': document.getElementById('findFirst')?.value,
+            'thirdName': document.getElementById('findThird')?.value,
+            'phone': document.getElementById('findPhone')?.value,
+            'email': document.getElementById('findEmail')?.value
+        }
+        const params = Object.keys(data).map(k => `${k}=${encodeURIComponent(data[k])}`).join('&');
+        const res = await fetch(`/client/find?${params}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        if (res.ok) {
+            const data = await res.json();
+            if (data.status == 'ok') {
+                document.getElementById('findMessage').innerText = data.message ? data.message : JSON.stringify(data.clients)
+            } else {
+                document.getElementById('findError').innerHTML = data.message
+            }
+        } else {
+            alert("")
+        }
     }
-
-    const findContainer = document.getElementById('find');
-    const findRoot = ReactDOM.createRoot(findContainer);
-    findRoot.render(<Find/>);
-
 </script>
 </body>
 </html>

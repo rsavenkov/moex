@@ -5,7 +5,7 @@ services:
     container_name: db
     restart: always
     environment:
-      POSTGRES_DB: "test"
+      POSTGRES_DB: "moex"
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "123456"
 #  app:

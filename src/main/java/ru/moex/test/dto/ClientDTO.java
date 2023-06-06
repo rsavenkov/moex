@@ -1,26 +1,11 @@
-package ru.moex.test;
+package ru.moex.test.dto;
 
-import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * Учетная запись
+ * Dto for create method
  */
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Entity
-public class Client {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class ClientDTO {
 
     /**
      * Идентификатор клиента в банке
@@ -77,4 +62,47 @@ public class Client {
      */
     private String liveAddress;
 
+    public Long getBankId() {
+        return bankId;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getThirdName() {
+        return thirdName;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public String getBirthPlace() {
+        return birthPlace;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRegAddress() {
+        return regAddress;
+    }
+
+    public String getLiveAddress() {
+        return liveAddress;
+    }
 }
