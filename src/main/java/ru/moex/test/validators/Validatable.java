@@ -1,21 +1,21 @@
 package ru.moex.test.validators;
 
-import ru.moex.test.dto.ClientDTO;
+import ru.moex.test.Client;
 
 import java.util.List;
 
 /**
- * Validation interface
+ * Field validation interface
  */
 public interface Validatable {
 
     /**
      * Perform fields validation
      *
-     * @param dto
+     * @param client
      * @return
      */
-    boolean validate(ClientDTO dto);
+    boolean validate(Client client);
 
     /**
      * Return required fields

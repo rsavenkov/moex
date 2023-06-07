@@ -10,7 +10,7 @@ RUN mvn clean package -Dmaven.test.skip
 ### package stage
 FROM openjdk:11-jre-slim
 
-ARG JAR_NAME=crypto-1.0.jar
+ARG JAR_NAME=test-app.jar
 
 WORKDIR /apps
 

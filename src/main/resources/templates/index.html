@@ -23,10 +23,9 @@
         <input id="createEmail" placeholder="email"/>
         <input id="createRegAddress" placeholder="адрес регистрации"/>
         <input id="createLiveAddress" placeholder="адрес проживания"/>
-        <button type="submit">создать</button>
+        <button type="submit">Создать</button>
     </form>
-    <p id="createMessage"></p>
-    <p id="createError" style="color:red"></p>
+    <p id="createResult"></p>
     <hr/>
 </div>
 <script type="text/javascript">
@@ -43,9 +42,9 @@
             'phone': document.getElementById('createPhone')?.value,
             'email': document.getElementById('createEmail')?.value,
             'regAddress': document.getElementById('createRegAddress')?.value,
-            'liveAddress': document.getElementById('createLiveAddress')?.value
+            'liveAddress': document.getElementById('createLiveAddress')?.value,
         }
-        const res = await fetch('/client/save', {
+        const res = await fetch('/api/client', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -54,33 +53,22 @@
             },
             body: JSON.stringify(data)
         })
-        if (res.ok) {
-            const data = await res.json();
-            if (data.status == 'ok') {
-                document.getElementById('createMessage').innerText = data.message ? data.message : JSON.stringify(data.clients[0])
-            } else {
-                document.getElementById('createError').innerText = data.message
-            }
-        } else {
-            alert("")
-        }
+        const result = await res.json();
+        document.getElementById('createResult').innerText = res.ok ? JSON.stringify(result) : result.message;
     }
 </script>
 <div>
     <h2>Поиск учетной записи по id</h2>
     <input id="getId" type="number" placeholder="id"/>
-    <button onclick="get()">найти</button>
-    <p id="getMessage"></p>
-    <p id="getError" style="color:red"></p>
+    <button onclick="get()">Найти</button>
+    <p id="getResult"></p>
     <hr/>
 </div>
 <script type="text/javascript">
     const get = async () => {
         const id = document.getElementById('getId')
-        if (!id.value) {
-            return
-        }
-        const res = await fetch(`/client/get/${id.value}`, {
+        if (!id.value) return
+        const res = await fetch(`/api/client/${id.value}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -88,14 +76,10 @@
             },
         });
         if (res.ok) {
-            const data = await res.json();
-            if (data.status == 'ok') {
-                document.getElementById('getMessage').innerText = data.message ? data.message : JSON.stringify(data.clients[0])
-            } else {
-                document.getElementById('getError').innerText = data.message
-            }
+            const result = await res.json();
+            document.getElementById('getResult').innerText = JSON.stringify(result);
         } else {
-            alert("")
+            document.getElementById('getResult').innerText = `Пользователь с id = ${id.value} не найден`;
         }
     }
 </script>
@@ -104,25 +88,30 @@
     <input id="findSecond" placeholder="Фамилия"/>
     <input id="findFirst" placeholder="Имя"/>
     <input id="findThird" placeholder="Очество"/>
-    <input id="findPhone" placeholder="Телефон"/>
+    <input id="findPhone" placeholder="Телефон" maxlength="11"/>
     <input id="findEmail" placeholder="email"/>
-    <button onclick="find()">найти</button>
-    <p id="findMessage"></p>
-    <p id="findError" style="color:red"></p>
+    <button onclick="find()">Найти</button>
+    <p id="findResult"></p>
     <hr/>
 </div>
 <script type="text/javascript">
     const find = async () => {
         // skip form validation, make it on server side
-        const data = {
+        let data = {}
+        ['findSecond', 'findFirst', 'findThird', 'findPhone', 'findEmail'].map(f => {
+            // Object.assign(data, document.getElementById(f)?.value ? {f : encodeURIComponent(document.getElementById(f).value)} : {})
+            console.log(f)
+        })
+        /*const data = {
+            ...document.getElementById('findSecond')?.value ? {'findSecond' : document.getElementById('findSecond').value} : {},
             'lastName': document.getElementById('findSecond')?.value,
             'firstName': document.getElementById('findFirst')?.value,
             'thirdName': document.getElementById('findThird')?.value,
             'phone': document.getElementById('findPhone')?.value,
             'email': document.getElementById('findEmail')?.value
-        }
-        const params = Object.keys(data).map(k => `${k}=${encodeURIComponent(data[k])}`).join('&');
-        const res = await fetch(`/client/find?${params}`, {
+        }*/
+        // const params = Object.keys(data).map(k => `${k}=${encodeURIComponent(data[k])}`).join('&');
+        const res = await fetch(`/api/client?${params}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -132,9 +121,9 @@
         if (res.ok) {
             const data = await res.json();
             if (data.status == 'ok') {
-                document.getElementById('findMessage').innerText = data.message ? data.message : JSON.stringify(data.clients)
+                document.getElementById('findResult').innerText = data.message ? data.message : JSON.stringify(data.clients)
             } else {
-                document.getElementById('findError').innerHTML = data.message
+                document.getElementById('findResult').innerHTML = data.message
             }
         } else {
             alert("")
