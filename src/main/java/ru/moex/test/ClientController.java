@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.moex.test.exceptions.FieldValidationException;
 import ru.moex.test.exceptions.InvalidHeaderException;
+import ru.moex.test.exceptions.ParamsNotPassedException;
 import ru.moex.test.validators.Validators;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,30 +41,10 @@ public class ClientController {
                              @RequestParam(required = false) String thirdName,
                              @RequestParam(required = false) String phone,
                              @RequestParam(required = false) String email) {
+        if (lastName == null && firstName == null && thirdName == null && phone == null && email == null) {
+            throw new ParamsNotPassedException();
+        }
         return clientService.getClients(lastName, firstName, thirdName, phone, email);
-        /*if (lastName != null && lastName.trim() != "") {
-            List<Client> clients = clientRepository.findByLastName(lastName);
-            return clients.isEmpty() ? new ResponseDTO("ok", "По заданным параметрам ничего не найдено.", null) : new ResponseDTO("ok", "", clients.get(0));
-        }
-        if (firstName != null && firstName.trim() != "") {
-            List<Client> clients = clientRepository.findByFirstName(firstName);
-            return clients.isEmpty() ? new ResponseDTO("ok", "По заданным параметрам ничего не найдено.", null) : new ResponseDTO("ok", "", clients.get(0));
-        }
-        if (thirdName != null && thirdName.trim() != "") {
-            List<Client> clients = clientRepository.findByThirdName(thirdName);
-            return clients.isEmpty() ? new ResponseDTO("ok", "По заданным параметрам ничего не найдено.", null) : new ResponseDTO("ok", "", clients.get(0));
-        }
-        if (phone != null && phone.trim() != "") {
-            List<Client> clients = clientRepository.findByPhone(phone);
-            return clients.isEmpty() ? new ResponseDTO("ok", "По заданным параметрам ничего не найдено.", null) : new ResponseDTO("ok", "", clients.get(0));
-        }
-        if (email != null && email.trim() != "") {
-            List<Client> clients = clientRepository.findByEmail(email);
-            return clients.isEmpty() ? new ResponseDTO("ok", "По заданным параметрам ничего не найдено.", null) : new ResponseDTO("ok", "", clients.get(0));
-        }
-        List<Client> clients = clientService.findByLastNameOrFirstNameOrThirdNameOrPhoneOrEmail(lastName, firstName, thirdName, phone, email);
-        logger.warn("No one of params was passed to find method");
-        return new ResponseDTO("ok", "Ни один из параметров не передан!", clients);*/
     }
 
     @PostMapping

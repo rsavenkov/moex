@@ -11,18 +11,18 @@
     <select id="xSource">
         <option th:each="header: ${headers}" th:text="${header.name().toLowerCase()}" th:value="${header.name()}"/>
     </select>
-    <form action="#" onsubmit="create(); return false">
-        <input id="createBankId" placeholder="Id банка"/>
-        <input id="createSecond" placeholder="Фамилия"/>
-        <input id="createFirst" placeholder="Имя"/>
-        <input id="createThird" placeholder="Очество"/>
-        <input id="createBirthDate" placeholder="Дата рождения"/>
-        <input id="createPassport" placeholder="номер паспорта" maxlength="11"/>
-        <input id="createBirthPlace" placeholder="Место рождения"/>
-        <input id="createPhone" placeholder="телефон" maxlength="11"/>
-        <input id="createEmail" placeholder="email"/>
-        <input id="createRegAddress" placeholder="адрес регистрации"/>
-        <input id="createLiveAddress" placeholder="адрес проживания"/>
+    <form id="create-form" action="#" onsubmit="create(); return false">
+        <input name="bankId" placeholder="Id банка"/>
+        <input name="lastName" placeholder="Фамилия"/>
+        <input name="firstName" placeholder="Имя"/>
+        <input name="thirdName" placeholder="Очество"/>
+        <input name="birthDate" placeholder="Дата рождения"/>
+        <input name="passport" placeholder="номер паспорта" maxlength="11"/>
+        <input name="birthPlace" placeholder="Место рождения"/>
+        <input name="phone" placeholder="телефон" maxlength="11"/>
+        <input name="email" placeholder="email"/>
+        <input name="regAddress" placeholder="адрес регистрации"/>
+        <input name="liveAddress" placeholder="адрес проживания"/>
         <button type="submit">Создать</button>
     </form>
     <p id="createResult"></p>
@@ -31,19 +31,10 @@
 <script type="text/javascript">
     const create = async () => {
         // skip form validation, make it on server side
-        const data = {
-            'bankId': document.getElementById('createBankId')?.value,
-            'lastName': document.getElementById('createSecond')?.value,
-            'firstName': document.getElementById('createFirst')?.value,
-            'thirdName': document.getElementById('createThird')?.value,
-            'birthDate': document.getElementById('createBirthDate')?.value,
-            'passport': document.getElementById('createPassport')?.value,
-            'birthPlace': document.getElementById('createBirthPlace')?.value,
-            'phone': document.getElementById('createPhone')?.value,
-            'email': document.getElementById('createEmail')?.value,
-            'regAddress': document.getElementById('createRegAddress')?.value,
-            'liveAddress': document.getElementById('createLiveAddress')?.value,
-        }
+        let data = {};
+        [...document.querySelectorAll('#create-form input')].map(i => {
+            Object.assign(data, i.value ? {[i.name] : i.value} : {})
+        })
         const res = await fetch('/api/client', {
             method: 'POST',
             headers: {
@@ -85,32 +76,26 @@
 </script>
 <div>
     <h2>Поиск учетной записи по полям</h2>
-    <input id="findSecond" placeholder="Фамилия"/>
-    <input id="findFirst" placeholder="Имя"/>
-    <input id="findThird" placeholder="Очество"/>
-    <input id="findPhone" placeholder="Телефон" maxlength="11"/>
-    <input id="findEmail" placeholder="email"/>
-    <button onclick="find()">Найти</button>
+    <form id="find-form" action="#" onsubmit="find(); return false">
+        <input name="lastName" placeholder="Фамилия"/>
+        <input name="firstName" placeholder="Имя"/>
+        <input name="thirdName" placeholder="Очество"/>
+        <input name="phone" placeholder="Телефон" maxlength="11"/>
+        <input name="email" placeholder="email"/>
+        <button type="submit">Найти</button>
+    </form>
     <p id="findResult"></p>
     <hr/>
 </div>
 <script type="text/javascript">
     const find = async () => {
         // skip form validation, make it on server side
-        let data = {}
-        ['findSecond', 'findFirst', 'findThird', 'findPhone', 'findEmail'].map(f => {
-            // Object.assign(data, document.getElementById(f)?.value ? {f : encodeURIComponent(document.getElementById(f).value)} : {})
-            console.log(f)
+        let data = {};
+        [...document.querySelectorAll('#find-form input')].map(i => {
+            Object.assign(data, i.value ? {[i.name] : i.value} : {})
         })
-        /*const data = {
-            ...document.getElementById('findSecond')?.value ? {'findSecond' : document.getElementById('findSecond').value} : {},
-            'lastName': document.getElementById('findSecond')?.value,
-            'firstName': document.getElementById('findFirst')?.value,
-            'thirdName': document.getElementById('findThird')?.value,
-            'phone': document.getElementById('findPhone')?.value,
-            'email': document.getElementById('findEmail')?.value
-        }*/
-        // const params = Object.keys(data).map(k => `${k}=${encodeURIComponent(data[k])}`).join('&');
+        if (Object.keys(data).length == 0) return
+        const params = Object.keys(data).map(k => `${k}=${encodeURIComponent(data[k])}`).join('&');
         const res = await fetch(`/api/client?${params}`, {
             method: 'GET',
             headers: {
@@ -118,16 +103,8 @@
                 'Content-Type': 'application/json'
             }
         })
-        if (res.ok) {
-            const data = await res.json();
-            if (data.status == 'ok') {
-                document.getElementById('findResult').innerText = data.message ? data.message : JSON.stringify(data.clients)
-            } else {
-                document.getElementById('findResult').innerHTML = data.message
-            }
-        } else {
-            alert("")
-        }
+        const result = await res.json();
+        document.getElementById('findResult').innerText = res.ok ? JSON.stringify(result) : result.message;
     }
 </script>
 </body>
