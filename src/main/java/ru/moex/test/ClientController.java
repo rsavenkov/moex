@@ -35,7 +35,7 @@ public class ClientController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping
+    @GetMapping("find")
     public List<Client> find(@RequestParam(required = false) String lastName,
                              @RequestParam(required = false) String firstName,
                              @RequestParam(required = false) String thirdName,

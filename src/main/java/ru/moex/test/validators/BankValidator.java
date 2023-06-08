@@ -14,11 +14,17 @@ public class BankValidator implements Validatable {
 
     @Override
     public boolean validate(Client client) {
-        return client.getBankId() == null || client.getBirthDate() == null ||
-                (client.getLastName() == null || client.getLastName().trim().isEmpty()) ||
-                (client.getFirstName() == null || client.getFirstName().trim().isEmpty()) ||
-                (client.getThirdName() == null || client.getThirdName().trim().isEmpty()) ||
-                (client.getPassport() == null || client.getPassport().trim().isEmpty() || client.getPassport().matches("^\\d{4} \\d{6}$")) ? false : true;
+        return client.getBankId() != null
+                && client.getBirthDate() != null
+                && client.getLastName() != null
+                && !client.getLastName().trim().isEmpty()
+                && client.getFirstName() != null
+                && !client.getFirstName().trim().isEmpty()
+                && client.getThirdName() != null
+                && !client.getThirdName().trim().isEmpty()
+                && client.getPassport() != null
+                && !client.getPassport().trim().isEmpty()
+                && client.getPassport().matches("^\\d{4} \\d{6}$");
     }
 
     @Override

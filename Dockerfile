@@ -16,4 +16,4 @@ EXPOSE 8080
 
 COPY --from=build /usr/src/app/target/test-1.0.jar app.jar
 
-ENTRYPOINT ["java","-jar","-Dspring.profiles.active=docker","-Dserver.servlet.context-path=/api","/apps/app.jar"]
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=docker","/apps/app.jar"]

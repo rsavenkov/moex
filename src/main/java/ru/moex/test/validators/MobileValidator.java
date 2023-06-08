@@ -14,7 +14,9 @@ public class MobileValidator implements Validatable {
 
     @Override
     public boolean validate(Client client) {
-        return client.getPhone() == null || client.getPhone().trim().isEmpty() || !client.getPhone().matches("^7\\d{10}$") ? false : true;
+        return client.getPhone() != null
+                && !client.getPhone().trim().isEmpty()
+                && client.getPhone().matches("^7\\d{10}$");
     }
 
     @Override

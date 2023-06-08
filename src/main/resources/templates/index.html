@@ -12,7 +12,7 @@
         <option th:each="header: ${headers}" th:text="${header.name().toLowerCase()}" th:value="${header.name()}"/>
     </select>
     <form id="create-form" action="#" onsubmit="create(); return false">
-        <input name="bankId" placeholder="Id банка"/>
+        <input name="bankId" placeholder="Id банка" type="number"/>
         <input name="lastName" placeholder="Фамилия"/>
         <input name="firstName" placeholder="Имя"/>
         <input name="thirdName" placeholder="Очество"/>
@@ -25,7 +25,7 @@
         <input name="liveAddress" placeholder="адрес проживания"/>
         <button type="submit">Создать</button>
     </form>
-    <p id="createResult"></p>
+    <p id="createResult"/>
     <hr/>
 </div>
 <script type="text/javascript">
@@ -35,7 +35,7 @@
         [...document.querySelectorAll('#create-form input')].map(i => {
             Object.assign(data, i.value ? {[i.name] : i.value} : {})
         })
-        const res = await fetch('/api/client', {
+        const res = await fetch('/client', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -52,14 +52,14 @@
     <h2>Поиск учетной записи по id</h2>
     <input id="getId" type="number" placeholder="id"/>
     <button onclick="get()">Найти</button>
-    <p id="getResult"></p>
+    <p id="getResult"/>
     <hr/>
 </div>
 <script type="text/javascript">
     const get = async () => {
         const id = document.getElementById('getId')
         if (!id.value) return
-        const res = await fetch(`/api/client/${id.value}`, {
+        const res = await fetch(`/client/${id.value}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -84,7 +84,7 @@
         <input name="email" placeholder="email"/>
         <button type="submit">Найти</button>
     </form>
-    <p id="findResult"></p>
+    <p id="findResult"/>
     <hr/>
 </div>
 <script type="text/javascript">
@@ -96,7 +96,7 @@
         })
         if (Object.keys(data).length == 0) return
         const params = Object.keys(data).map(k => `${k}=${encodeURIComponent(data[k])}`).join('&');
-        const res = await fetch(`/api/client?${params}`, {
+        const res = await fetch(`/client/find?${params}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
