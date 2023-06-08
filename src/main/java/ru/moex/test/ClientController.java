@@ -17,7 +17,7 @@ import java.util.List;
  * Client controller
  */
 @RestController()
-@RequestMapping("/api/client")
+@RequestMapping("/client")
 public class ClientController {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientController.class);

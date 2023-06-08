@@ -10,12 +10,10 @@ RUN mvn clean package -Dmaven.test.skip
 ### package stage
 FROM openjdk:11-jre-slim
 
-ARG JAR_NAME=test-app.jar
-
 WORKDIR /apps
 
 EXPOSE 8080
 
-COPY --from=build /usr/src/app/target/${JAR_NAME} app.jar
+COPY --from=build /usr/src/app/target/test-1.0.jar app.jar
 
-ENTRYPOINT ["java","-jar","-Dspring.profiles.active=prod","/apps/app.jar"]
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=docker","-Dserver.servlet.context-path=/api","/apps/app.jar"]

@@ -8,11 +8,13 @@ services:
       POSTGRES_DB: "moex"
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "123456"
-#  app:
-#    image:
-#    container_name: test-app
-#    restart: always
-#    ports:
-#      - 8080:8080
-#    depends_on:
-#      - db
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test-app
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db

@@ -30,7 +30,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<Client> getClients(String lastName, String firstName, String thirdName, String phone, String email) {
-        return clientRepository.findByLastNameOrFirstNameOrThirdNameOrPhoneOrEmail(lastName, firstName, thirdName, phone, email);
+        return clientRepository.findAllByFields(lastName, firstName, thirdName, phone, email);
     }
 
 }

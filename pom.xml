@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.moex</groupId>
 	<artifactId>test</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>test</name>
 	<description>Тестовое задание java</description>
 	<properties>
